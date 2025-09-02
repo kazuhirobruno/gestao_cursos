@@ -3,6 +3,8 @@ package br.com.kazuhiro.gestao_cursos.modules.course;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import br.com.kazuhiro.gestao_cursos.modules.teacher.TeacherEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +37,7 @@ public class CourseEntity {
   @Column(nullable = false)
   private int year;
 
-  @Column(nullable = false)
+  @CreationTimestamp
   private LocalDateTime createdAt;
 
 }

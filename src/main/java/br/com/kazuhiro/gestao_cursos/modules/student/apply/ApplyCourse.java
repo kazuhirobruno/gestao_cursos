@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import br.com.kazuhiro.gestao_cursos.modules.course.CourseEntity;
 import br.com.kazuhiro.gestao_cursos.modules.student.StudentEntity;
 
@@ -18,7 +20,7 @@ public class ApplyCourse {
   @JoinColumn(name = "student_id", referencedColumnName = "id")
   private StudentEntity student;
 
-  @Column(nullable = false)
+  @CreationTimestamp
   private LocalDateTime createdAt;
 
   @ManyToOne

@@ -1,12 +1,21 @@
 package br.com.kazuhiro.gestao_cursos.modules.student;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -16,24 +25,27 @@ public class StudentEntity {
   @GeneratedValue
   private UUID id;
 
-  @Column(nullable = false)
+  @NotBlank(message = "Informe o seu nome")
   private String name;
 
-  @Column(nullable = false)
-  private LocalDateTime birthDate;
+  @NotNull(message = "Informe a data de nascimento")
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  private LocalDate birthDate;
 
-  @Column(nullable = false, unique = true)
+  @NotBlank(message = "CPF é obrigatório")
   private String cpf;
 
-  @Column(nullable = false, unique = true)
+  @NotBlank(message = "O campo username é obrigatório")
+  @Pattern(regexp = "\\S+", message = "O campo [username] não deve conter espaço")
   private String username;
 
-  @Column(nullable = false, unique = true)
+  @Email(message = "O campo [email] deve conter um e-mail válido")
   private String email;
 
-  @Column(nullable = false)
+  @NotBlank(message = "Preencha sua senha")
+  @Length(min = 10, max = 100, message = "A senha deve conter entre 8 e 128 caracteres")
   private String password;
 
-  @Column(nullable = false)
+  @CreationTimestamp
   private LocalDateTime createdAt;
 }
