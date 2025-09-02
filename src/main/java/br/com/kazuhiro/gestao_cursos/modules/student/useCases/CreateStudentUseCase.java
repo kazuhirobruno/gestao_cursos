@@ -3,8 +3,10 @@ package br.com.kazuhiro.gestao_cursos.modules.student.useCases;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.kazuhiro.gestao_cursos.exceptions.InvalidCPFException;
 import br.com.kazuhiro.gestao_cursos.modules.student.StudentEntity;
 import br.com.kazuhiro.gestao_cursos.modules.student.repository.StudentRepository;
+import br.com.kazuhiro.gestao_cursos.utils.CpfValidator;
 
 @Service
 public class CreateStudentUseCase {
@@ -13,9 +15,13 @@ public class CreateStudentUseCase {
   private StudentRepository studentRepository;
 
   public StudentEntity execute(StudentEntity student) {
+    // Check if CPF is valid
+    if (!CpfValidator.isCPF(student.getCpf())) {
+      throw new InvalidCPFException("CPF inválido");
+    }
     // check if username, email or cpf already exists
 
     // should encrypt password
-    return studentRepository.save(student);
+    return this.studentRepository.save(student);
   }
 }

@@ -2,20 +2,20 @@
 
 Serviço de CRUD para controle de cursos
 
-# Entidades
+## Entidades
 
-## Estudante (student)
+### Estudante (student)
 
-Entidade responsável por cadastrar os estudantes
+Entidade responsável pelos estudantes
 
-## Professor (teacher)
+### Professor (teacher)
 
-Entidade responsável por cadastrar os professores
+Entidade responsável pelos professores
 
-## Curso (course)
+### Curso (course)
 
-Entidade responsável por cadastrar os cursos disponíveis
+Entidade responsável pelos cursos disponíveis
 
-## Aplicação de curso (applyCourse)
+### Aplicação de curso (applyCourse)
 
-Entidade responsável por realizar matrícula de aluno em curso
+Entidade responsável pela matrícula de aluno em curso
