@@ -9,4 +9,6 @@ import br.com.kazuhiro.gestao_cursos.modules.student.StudentEntity;
 
 public interface StudentRepository extends JpaRepository<StudentEntity, UUID> {
   Optional<StudentEntity> findByUsernameOrCpfOrEmail(String username, String cpf, String email);
+
+  Optional<StudentEntity> findByUsername(String username);
 }
