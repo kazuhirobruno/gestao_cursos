@@ -20,7 +20,7 @@ public class CreateTeacherUseCase {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-  public void execute(CreateTeacherDTO teacherDTO) {
+  public TeacherEntity execute(CreateTeacherDTO teacherDTO) {
     // check cpf
     if (!CpfValidator.isCPF(teacherDTO.getCpf())) {
       throw new InvalidCPFException("CPF inválido");
@@ -53,5 +53,7 @@ public class CreateTeacherUseCase {
         .build();
 
     System.out.println("Save teacher");
+    var result = teacherRepository.save(teacher);
+    return result;
   }
 }

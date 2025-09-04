@@ -1,9 +1,12 @@
 package br.com.kazuhiro.gestao_cursos.modules.student.useCases;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.kazuhiro.gestao_cursos.exceptions.InvalidCPFException;
 import br.com.kazuhiro.gestao_cursos.exceptions.PasswordDoNotMatchesException;
-import br.com.kazuhiro.gestao_cursos.exceptions.StudentFoundException;
+import br.com.kazuhiro.gestao_cursos.exceptions.UserFoundException;
 import br.com.kazuhiro.gestao_cursos.modules.student.StudentEntity;
 import br.com.kazuhiro.gestao_cursos.modules.student.dtos.CreateStudentDTO;
 import br.com.kazuhiro.gestao_cursos.modules.student.repository.StudentRepository;
@@ -48,6 +51,7 @@ public class CreateStudentUseCaseTest {
         .build();
     try {
       createStudentUseCase.execute(student);
+      Assertions.fail("Expected InvalidCPFException to be thrown");
     } catch (Exception e) {
       Assertions.assertThat(e).isInstanceOf(InvalidCPFException.class);
     }
@@ -66,25 +70,30 @@ public class CreateStudentUseCaseTest {
         .birthDate(LocalDate.of(2000, 1, 1))
         .phone("11999999999")
         .build();
-    Assertions.assertThatCode(() -> createStudentUseCase.execute(student)).doesNotThrowAnyException();
+
+    try {
+      Assertions.assertThatCode(() -> createStudentUseCase.execute(student)).doesNotThrowAnyException();
+    } catch (Exception e) {
+      Assertions.fail("Did not expect an exception to be thrown, but got: " + e.getMessage());
+    }
   }
 
   @Test
   @DisplayName("Should not be able to create a student with duplicate username, email or CPF")
   public void shouldNotCreateStudentWithDuplicateUsernameEmailOrCPF() {
-    var student = CreateStudentDTO.builder()
+    var clonedStudent = StudentEntity.builder()
+        .id(UUID.randomUUID())
         .name("Test")
         .username("existinguser")
         .email("test@test.com")
         .cpf("12345678909")
         .password("password123")
-        .confirmPassword("password123")
         .birthDate(LocalDate.of(2000, 1, 1))
         .phone("11999999999")
         .build();
-    createStudentUseCase.execute(student);
     try {
-      when(studentRepository.save(any(StudentEntity.class))).thenReturn(new StudentEntity());
+      when(studentRepository.findByUsernameOrCpfOrEmail(anyString(), anyString(), anyString()))
+          .thenReturn(Optional.of(clonedStudent));
       var createdStudent = CreateStudentDTO.builder()
           .name("Test")
           .username("existinguser")
@@ -96,8 +105,9 @@ public class CreateStudentUseCaseTest {
           .phone("11999999999")
           .build();
       createStudentUseCase.execute(createdStudent);
+      Assertions.fail("Expected UserFoundException to be thrown");
     } catch (Exception e) {
-      Assertions.assertThat(e).isInstanceOf(StudentFoundException.class);
+      Assertions.assertThat(e).isInstanceOf(UserFoundException.class);
     }
   }
 
@@ -146,6 +156,7 @@ public class CreateStudentUseCaseTest {
         .build();
     try {
       createStudentUseCase.execute(student);
+      Assertions.fail("Should throw PasswordDoNotMatchesException");
     } catch (Exception e) {
       Assertions.assertThat(e).isInstanceOf(PasswordDoNotMatchesException.class);
     }
