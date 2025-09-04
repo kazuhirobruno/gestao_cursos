@@ -55,7 +55,7 @@ public class StudentEntity {
   private String email;
 
   @NotBlank(message = "Preencha sua senha")
-  @Length(min = 10, max = 100, message = "A senha deve conter entre 8 e 128 caracteres")
+  @Length(min = 8, max = 128, message = "A senha deve conter entre 8 e 128 caracteres")
   @Schema(example = "AyP{<q$qxT=W$]uU0V1!:AI<c}gS4heYe%m9uE6c>F)ybEpC{P',iP?D")
   private String password;
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.kazuhiro.gestao_cursos.exceptions.InvalidCPFException;
 import br.com.kazuhiro.gestao_cursos.exceptions.PasswordDoNotMatchesException;
-import br.com.kazuhiro.gestao_cursos.exceptions.StudentFoundException;
+import br.com.kazuhiro.gestao_cursos.exceptions.UserFoundException;
 import br.com.kazuhiro.gestao_cursos.modules.student.StudentEntity;
 import br.com.kazuhiro.gestao_cursos.modules.student.dtos.CreateStudentDTO;
 import br.com.kazuhiro.gestao_cursos.modules.student.repository.StudentRepository;
@@ -36,7 +36,7 @@ public class CreateStudentUseCase {
     this.studentRepository.findByUsernameOrCpfOrEmail(studentDTO.getUsername(),
         studentDTO.getCpf(), studentDTO.getEmail())
         .ifPresent(user -> {
-          throw new StudentFoundException("Username, e-mail ou CPF já cadastrado.");
+          throw new UserFoundException("Username, e-mail ou CPF já cadastrado.");
         });
 
     // should encrypt password
