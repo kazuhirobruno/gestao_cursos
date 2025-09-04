@@ -5,11 +5,13 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.security.sasl.AuthenticationException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.lang.reflect.Field;
 
 import br.com.kazuhiro.gestao_cursos.modules.student.StudentEntity;
 import br.com.kazuhiro.gestao_cursos.modules.student.dtos.AuthStudentRequestDTO;
@@ -32,6 +35,13 @@ public class AuthStudentUseCaseTest {
 
   @InjectMocks
   private AuthStudentUseCase authStudentUseCase;
+
+  @BeforeEach
+  void setup() throws Exception {
+    Field field = AuthStudentUseCase.class.getDeclaredField("secretKey");
+    field.setAccessible(true);
+    field.set(authStudentUseCase, "test-secret-key");
+  }
 
   @Test
   @DisplayName("Should authenticate a student with valid credentials")
@@ -92,6 +102,7 @@ public class AuthStudentUseCaseTest {
         .password("password123")
         .birthDate(LocalDate.of(2000, 1, 1))
         .phone("11999999999")
+        .id(UUID.randomUUID())
         .build();
 
     when(studentRepository.findByUsername(anyString())).thenReturn(Optional.of(student));
@@ -105,7 +116,7 @@ public class AuthStudentUseCaseTest {
       Assertions.assertThat(authResponse.getRoles()).isNotEmpty();
     } catch (Exception e) {
       e.printStackTrace();
-      Assertions.fail("Authentication should not have thrown an exception");
+      Assertions.fail(e.getMessage());
     }
   }
 }
