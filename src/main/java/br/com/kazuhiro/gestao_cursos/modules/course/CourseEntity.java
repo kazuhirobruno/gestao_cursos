@@ -6,38 +6,47 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 
 import br.com.kazuhiro.gestao_cursos.modules.teacher.TeacherEntity;
-import jakarta.persistence.Column;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "course")
 public class CourseEntity {
   @Id
   @GeneratedValue
   private UUID id;
 
-  @Column(nullable = false)
+  @NotBlank(message = "Informe o nome do curso")
+  @Schema(example = "Computer science")
   private String name;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
   private TeacherEntity teacherEntity; // Foreign key to Teacher entity
 
-  @Column(nullable = false)
+  @NotNull(message = "Informe o número de vagas")
+  @Schema(example = "5")
   private int slots;
 
-  @Column(nullable = false)
-  private int occupiedSlots;
-
-  @Column(nullable = false)
-  private int year;
+  @NotNull(message = "Informe o ano e o semestre - YYYYSemester")
+  @Schema(example = "202502")
+  private int semester;
 
   @CreationTimestamp
+  @Schema(example = "2023-10-05T14:48:00.000Z")
   private LocalDateTime createdAt;
 
 }
