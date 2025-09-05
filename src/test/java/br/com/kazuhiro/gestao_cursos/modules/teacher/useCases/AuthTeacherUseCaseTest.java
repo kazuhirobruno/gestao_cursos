@@ -1,8 +1,9 @@
-package br.com.kazuhiro.gestao_cursos.modules.student.useCases;
+package br.com.kazuhiro.gestao_cursos.modules.teacher.useCases;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,51 +11,50 @@ import java.util.UUID;
 import javax.security.sasl.AuthenticationException;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import java.lang.reflect.Field;
 
-import br.com.kazuhiro.gestao_cursos.modules.student.StudentEntity;
-import br.com.kazuhiro.gestao_cursos.modules.student.dtos.AuthStudentRequestDTO;
-import br.com.kazuhiro.gestao_cursos.modules.student.repository.StudentRepository;
+import br.com.kazuhiro.gestao_cursos.modules.teacher.TeacherEntity;
+import br.com.kazuhiro.gestao_cursos.modules.teacher.dtos.AuthTeacherRequestDTO;
+import br.com.kazuhiro.gestao_cursos.modules.teacher.repository.TeacherRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthStudentUseCaseTest {
+public class AuthTeacherUseCaseTest {
   @Mock
-  private StudentRepository studentRepository;
+  private TeacherRepository teacherRepository;
 
   @Mock
   private PasswordEncoder passwordEncoder;
 
   @InjectMocks
-  private AuthStudentUseCase authStudentUseCase;
+  private AuthTeacherUseCase authTeacherUseCase;
 
   @BeforeEach
   void setup() throws Exception {
-    Field field = AuthStudentUseCase.class.getDeclaredField("secretKey");
+    Field field = AuthTeacherUseCase.class.getDeclaredField("secretKey");
     field.setAccessible(true);
-    field.set(authStudentUseCase, "test-secret-key");
+    field.set(authTeacherUseCase, "test-secret-key");
   }
 
   @Test
   @DisplayName("Should not authenticate with non existing username.")
-  public void shouldNotAuthenticateStudentWithNonExistingUsername() {
-    var loginInfo = AuthStudentRequestDTO.builder()
+  public void shouldNotAuthenticateTeacherWithNonExistingUsername() {
+    var loginInfo = AuthTeacherRequestDTO.builder()
         .username("notExistingUser")
         .password("password123")
         .build();
 
-    when(studentRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+    when(teacherRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
     try {
-      authStudentUseCase.execute(loginInfo);
+      authTeacherUseCase.execute(loginInfo);
       Assertions.fail("Should trown an exception");
     } catch (Exception e) {
       Assertions.assertThat(e).isInstanceOf(UsernameNotFoundException.class);
@@ -62,14 +62,14 @@ public class AuthStudentUseCaseTest {
   }
 
   @Test
-  @DisplayName("Should not authenticate a student with invalid password")
-  public void shouldNotAuthenticateStudentWithInvalidPassword() {
-    var loginInfo = AuthStudentRequestDTO.builder()
+  @DisplayName("Should not authenticate a teacher with invalid password")
+  public void shouldNotAuthenticateTeacherWithInvalidPassword() {
+    var loginInfo = AuthTeacherRequestDTO.builder()
         .username("existinguser")
         .password("wrongpassword")
         .build();
 
-    var student = StudentEntity.builder()
+    var teacher = TeacherEntity.builder()
         .name("Test")
         .username("existinguser")
         .email("test@test.com")
@@ -79,9 +79,9 @@ public class AuthStudentUseCaseTest {
         .phone("11999999999")
         .build();
 
-    when(studentRepository.findByUsername(anyString())).thenReturn(Optional.of(student));
+    when(teacherRepository.findByUsername(anyString())).thenReturn(Optional.of(teacher));
     try {
-      authStudentUseCase.execute(loginInfo);
+      authTeacherUseCase.execute(loginInfo);
       Assertions.fail("Should Trown Exception");
     } catch (Exception e) {
       Assertions.assertThat(e).isInstanceOf(AuthenticationException.class);
@@ -89,14 +89,14 @@ public class AuthStudentUseCaseTest {
   }
 
   @Test
-  @DisplayName("Should authenticate a student with valid credentials")
-  public void shouldAuthenticateStudentWithValidCredentials() {
-    var loginInfo = AuthStudentRequestDTO.builder()
+  @DisplayName("Should authenticate a teacher with valid credentials")
+  public void shouldAuthenticateTeacherWithValidCredentials() {
+    var loginInfo = AuthTeacherRequestDTO.builder()
         .username("existinguser")
         .password("password123")
         .build();
 
-    var student = StudentEntity.builder()
+    var teacher = TeacherEntity.builder()
         .name("Test")
         .username("existinguser")
         .email("teste@teste.com")
@@ -107,11 +107,11 @@ public class AuthStudentUseCaseTest {
         .id(UUID.randomUUID())
         .build();
 
-    when(studentRepository.findByUsername(anyString())).thenReturn(Optional.of(student));
+    when(teacherRepository.findByUsername(anyString())).thenReturn(Optional.of(teacher));
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
     try {
-      var authResponse = authStudentUseCase.execute(loginInfo);
+      var authResponse = authTeacherUseCase.execute(loginInfo);
       Assertions.assertThat(authResponse).isNotNull();
       Assertions.assertThat(authResponse.getToken()).isNotBlank();
       Assertions.assertThat(authResponse.getExpiresIn()).isNotNull();

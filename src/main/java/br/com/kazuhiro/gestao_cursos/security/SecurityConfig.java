@@ -30,6 +30,7 @@ public class SecurityConfig {
           auth.requestMatchers("/student/").permitAll()
               .requestMatchers("/teacher/").permitAll()
               .requestMatchers("/student/auth").permitAll()
+              .requestMatchers("/teacher/auth").permitAll()
               .requestMatchers(PERMIT_ALL_LIST).permitAll();
           auth.anyRequest().authenticated();
         })

@@ -52,7 +52,6 @@ public class CreateTeacherUseCase {
         .phone(teacherDTO.getPhone())
         .build();
 
-    System.out.println("Save teacher");
     var result = teacherRepository.save(teacher);
     return result;
   }

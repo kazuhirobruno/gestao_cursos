@@ -9,4 +9,6 @@ import br.com.kazuhiro.gestao_cursos.modules.teacher.TeacherEntity;
 
 public interface TeacherRepository extends JpaRepository<TeacherEntity, UUID> {
   Optional<TeacherEntity> findByUsernameOrCpfOrEmail(String username, String cpf, String email);
+
+  Optional<TeacherEntity> findByUsername(String username);
 }

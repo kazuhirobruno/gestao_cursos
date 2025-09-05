@@ -15,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +38,7 @@ public class TeacherEntity {
 
   @Schema(example = "2000-01-01T00:00:00")
   @JsonFormat(pattern = "yyyy-MM-dd")
-  @NotBlank(message = "Informe a data de nascimento")
+  @NotNull(message = "Informe a data de nascimento")
   private LocalDate birthDate;
 
   @NotBlank(message = "CPF é obrigatório")
