@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import br.com.kazuhiro.gestao_cursos.modules.teacher.TeacherEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -48,5 +49,10 @@ public class CourseEntity {
   @CreationTimestamp
   @Schema(example = "2023-10-05T14:48:00.000Z")
   private LocalDateTime createdAt;
+
+  @Schema(example = "b6c44857-cff8-4599-8b83-f654e871d03e")
+  @NotNull(message = "Informe o ID do professor")
+  @Column(name = "teacher_id")
+  private UUID teacherId;
 
 }

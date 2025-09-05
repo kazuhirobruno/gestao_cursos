@@ -50,7 +50,7 @@ public class AuthTeacherUseCase {
         .withSubject(teacher.getId().toString())
         .withExpiresAt(expiresIn)
         .withClaim("name", teacher.getName())
-        .withClaim("Roles", roles)
+        .withClaim("roles", roles)
         .sign(algorithm);
 
     var authTeacherResponseDTO = AuthTeacherResponseDTO.builder()

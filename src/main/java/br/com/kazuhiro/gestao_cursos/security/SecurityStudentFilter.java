@@ -40,7 +40,8 @@ public class SecurityStudentFilter extends OncePerRequestFilter {
         var grants = roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
             .toList();
 
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(), grants);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(), null,
+            grants);
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
     }
