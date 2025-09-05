@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/teacher")
-@Tag(name = "Auth teacher", description = "Teacher authentication endpoint")
+@Tag(name = "Auth Teacher", description = "Teacher authentication endpoint")
 public class AuthTeacherController {
   @Autowired
   private AuthTeacherUseCase authTeacherUseCase;

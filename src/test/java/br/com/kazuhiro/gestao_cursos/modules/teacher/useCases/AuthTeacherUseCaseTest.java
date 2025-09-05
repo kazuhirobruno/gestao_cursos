@@ -82,7 +82,7 @@ public class AuthTeacherUseCaseTest {
     when(teacherRepository.findByUsername(anyString())).thenReturn(Optional.of(teacher));
     try {
       authTeacherUseCase.execute(loginInfo);
-      Assertions.fail("Should Trown Exception");
+      Assertions.fail("Should trown an exception");
     } catch (Exception e) {
       Assertions.assertThat(e).isInstanceOf(AuthenticationException.class);
     }
